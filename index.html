@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Soul Engine</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0A0A0E">
+  <style>
+    html, body { margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; color:#eee; background:#0b0b11; }
+    header { position:sticky; top:0; padding:12px 16px; background:rgba(11,11,17,0.82); backdrop-filter: blur(6px); border-bottom:1px solid #222; }
+    h1 { font-size:18px; margin:0; letter-spacing:0.5px; }
+    .tabs { display:flex; gap:8px; margin-top:8px; }
+    .tab { padding:8px 10px; border:1px solid #2a2a36; border-radius:9px; cursor:pointer; user-select:none; background:#0f0f16; }
+    .tab.active { border-color:#637aa6; }
+    main { padding: 12px 12px 80px 12px; }
+    .row { display:flex; gap:8px; margin-bottom:8px; align-items:center; }
+    input[type="text"], textarea { width:100%; padding:12px; border:1px solid #2a2a36; border-radius:9px; font: inherit; background:#0f0f16; color:#eee; }
+    textarea { min-height:230px; }
+    button { padding:10px 12px; border:1px solid #2a2a36; background:#13131d; color:#eee; border-radius:9px; cursor:pointer; font:inherit; }
+    button.primary { border-color:#637aa6; }
+    .list { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+    .card { border:1px solid #222534; border-radius:12px; padding:12px; background:#0f0f16; }
+    .meta { font-size:12px; opacity:0.75; }
+    .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .footerbar { position: fixed; bottom:0; left:0; right:0; background:#0f0f16; border-top:1px solid #222534; display:flex; gap:8px; padding:10px; justify-content:space-around; }
+    .hide { display:none; }
+    label { font-size: 12px; opacity:0.9; }
+    .split { display:flex; gap:8px; }
+    .split > * { flex:1; }
+    .hint { color:#b9d4ff; font-size:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SOUL ENGINE</h1>
+    <div class="tabs">
+      <div class="tab active" data-tab="scenes">Scenes</div>
+      <div class="tab" data-tab="lore">Lore</div>
+      <div class="tab" data-tab="settings">Settings</div>
+    </div>
+  </header>
+
+  <main>
+    <section id="scenes" class="panel">
+      <div class="row">
+        <input id="sceneSearch" type="text" placeholder="Search scenes by title or text">
+        <button id="newScene" class="primary">New Scene</button>
+      </div>
+      <div id="sceneList" class="list"></div>
+      <p class="hint">Tip: keep one scene per file for speed on iPhone.</p>
+    </section>
+
+    <section id="lore" class="panel hide">
+      <div class="row">
+        <input id="loreSearch" type="text" placeholder="Search lore">
+        <button id="newLore" class="primary">New Lore</button>
+      </div>
+      <div id="loreList" class="list"></div>
+    </section>
+
+    <section id="settings" class="panel hide">
+      <div class="card">
+        <h3>Export / Import</h3>
+        <div class="actions">
+          <button id="exportBtn" class="primary">Export JSON</button>
+          <input id="importFile" type="file" accept="application/json">
+        </div>
+      </div>
+      <div class="card">
+        <h3>Text to Speech (optional ElevenLabs)</h3>
+        <div class="row"><label>API Key</label><input id="apiKey" type="text" placeholder="xi-api-key"></div>
+        <div class="row"><label>Voice ID</label><input id="voiceId" type="text" placeholder="voice id"></div>
+        <div class="actions">
+          <button id="testTts">Test TTS</button>
+        </div>
+        <p class="meta">No API key? Use iOS Speak Selection (Select text → Speak).</p>
+      </div>
+      <div class="card">
+        <h3>About</h3>
+        <p class="meta">Install via Safari → Share → Add to Home Screen. Works offline. Data stays on your device (IndexedDB).</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="footerbar">
+    <button id="installBtn">Install</button>
+    <button id="backupBtn">Quick Backup</button>
+    <button id="statsBtn">Stats</button>
+  </div>
+
+  <template id="sceneEditorTpl">
+    <div class="card">
+      <div class="row"><input class="title" type="text" placeholder="Scene title"></div>
+      <div class="split">
+        <input class="pov" type="text" placeholder="POV">
+        <input class="loc" type="text" placeholder="Location">
+      </div>
+      <div class="row"><textarea class="body" placeholder="# Beat outline
+- Setup:
+- Turn:
+- Crisis:
+- Climax:
+- Aftermath:
+
+# Scene text
+
+# Continuity notes
+
+# Revision notes"></textarea></div>
+      <div class="meta"><span class="count">0 words</span></div>
+      <div class="actions">
+        <button class="save primary">Save</button>
+        <button class="speak">Speak</button>
+        <button class="del">Delete</button>
+        <button class="close">Close</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="loreEditorTpl">
+    <div class="card">
+      <div class="row"><input class="title" type="text" placeholder="Lore title (Character, Location, Item...)"></div>
+      <div class="row"><textarea class="body" placeholder="Facts, rules, links, references"></textarea></div>
+      <div class="actions">
+        <button class="save primary">Save</button>
+        <button class="del">Delete</button>
+        <button class="close">Close</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="seed.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
